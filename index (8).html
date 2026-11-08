@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مداد</title>
+<meta name="description" content="مداد: منصة عربية لنشر الروايات وقراءتها.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230B6B68' d='M12 2C12 2 5 10.2 5 15.2a7 7 0 0 0 14 0C19 10.2 12 2 12 2z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@500;700&family=Tajawal:wght@400;500;700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#EEF1F6; --surface:#FFFFFF; --fg:#14203A; --muted:#566280; --line:#D3DAE7;
+  --accent:#0B6B68; --on-accent:#FFFFFF; --soft:#DDEBEA; --danger:#B42A3A;
+  --f-display:'Reem Kufi','Tajawal',system-ui,sans-serif;
+  --f-ui:'Tajawal','Segoe UI',Tahoma,system-ui,sans-serif;
+  --f-read:'Amiri','Noto Naskh Arabic','Traditional Arabic',serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme:dark;
+    --bg:#0D1422; --surface:#151F36; --fg:#E7ECF6; --muted:#9BA7C1; --line:#26324F;
+    --accent:#4FC3BD; --on-accent:#06201F; --soft:#17302F; --danger:#FF7A88;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--fg); font-family:var(--f-ui); font-size:16px; line-height:1.7;
+  padding-block:env(safe-area-inset-top,0px) 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.wrap{max-width:1040px;margin-inline:auto}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:18px;border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:8px;font:700 30px/1 var(--f-display);color:var(--fg);text-decoration:none}
+.logo svg{width:22px;height:22px;color:var(--accent)}
+.nav{display:flex;gap:8px;flex-wrap:wrap}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:0 18px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:500 15px var(--f-ui);cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.danger{color:var(--danger);border-color:currentColor;background:transparent}
+.btn.danger.solid{background:var(--danger);border-color:var(--danger);color:var(--bg)}
+.btn[disabled]{opacity:.55;cursor:default}
+.inl{display:inline-flex;gap:8px;flex-wrap:wrap}
+
+.hero{display:grid;gap:14px;max-width:62ch;padding-block:32px 22px}
+h1{font:700 clamp(28px,6.5vw,46px)/1.3 var(--f-display);margin:0;text-wrap:balance}
+h2{font:700 clamp(22px,4.5vw,30px)/1.4 var(--f-display);margin:0;text-wrap:balance}
+.sub{margin:0;color:var(--muted);font-size:17px}
+.in{width:100%;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:400 16px/1.6 var(--f-ui)}
+textarea.in{min-height:130px;resize:vertical}
+textarea.story{font-family:var(--f-read);font-size:20px;line-height:2;min-height:340px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:5px 14px;border-radius:999px;font:500 14px var(--f-ui);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:26px 16px;margin-top:22px}
+.card{display:flex;flex-direction:column;gap:3px;text-decoration:none;color:inherit;min-width:0}
+.card-t{font-weight:700;font-size:16px;line-height:1.5;margin-top:8px;overflow-wrap:anywhere}
+.card-a{color:var(--muted);font-size:14px}
+.card-m{color:var(--muted);font-size:13px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.badge{font-size:12px;padding:0 9px;border-radius:999px;background:var(--soft);color:var(--accent);line-height:1.8}
+
+.cover{--c:#1F3A5F;container-type:inline-size;aspect-ratio:2/3;max-width:100%;border-radius:14px 4px 4px 14px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:9cqw 11cqw 9cqw 9cqw;
+  background:radial-gradient(circle at 18% 12%,rgba(255,255,255,.16) 0 17%,transparent 18%),radial-gradient(circle at 90% 100%,rgba(0,0,0,.2) 0 34%,transparent 35%),var(--c);
+  box-shadow:inset -7px 0 0 rgba(0,0,0,.22);transition:transform .2s;position:relative;overflow:hidden}
+.cover::after{content:"";position:absolute;inset:3cqw;border:1px solid rgba(255,255,255,.3);border-radius:10px 2px 2px 10px;pointer-events:none}
+.cover.has-img{padding:0;background:var(--surface)}
+.cover.has-img::after{display:none}
+.cover.has-img img{width:100%;height:100%;object-fit:cover;display:block}
+.cv-g{font:500 clamp(10px,7cqw,14px)/1.4 var(--f-ui);opacity:.85;min-height:1em}
+.cv-t{font:700 clamp(15px,12cqw,30px)/1.4 var(--f-display);display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.cv-a{font:500 clamp(11px,7.5cqw,15px)/1.4 var(--f-ui);overflow-wrap:anywhere}
+a.card:hover .cover{transform:translateY(-3px)}
+
+.state{border:1px dashed var(--line);border-radius:14px;padding:40px 20px;text-align:center;color:var(--muted);display:grid;gap:12px;justify-items:center;margin-top:22px}
+.state b{color:var(--fg);font-size:18px}
+.back{display:inline-block;margin-block:18px 4px;color:var(--muted);text-decoration:none;font-size:15px}
+.back:hover{color:var(--accent)}
+
+.nv{display:grid;grid-template-columns:200px minmax(0,1fr);gap:28px;margin-top:10px}
+.nv-i{display:grid;gap:12px;align-content:start;min-width:0}
+.meta{color:var(--muted);font-size:15px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sum{margin:0;max-width:62ch;white-space:pre-line}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.chs{list-style:none;padding:0;margin:22px 0 0;display:grid;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.ch{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line)}
+.ch:last-child{border-bottom:0}
+.ch .no{font:700 18px var(--f-display);color:var(--accent);min-width:2ch;font-variant-numeric:tabular-nums}
+.ch .t{flex:1;min-width:0;color:inherit;text-decoration:none;font-weight:500;overflow-wrap:anywhere}
+.ch .t:hover{color:var(--accent)}
+.ch .m{color:var(--muted);font-size:13px;white-space:nowrap}
+.ch .ed{font-size:13px;color:var(--muted)}
+
+.reader{max-width:68ch;margin-inline:auto}
+.rbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding-block:12px;border-bottom:1px solid var(--line)}
+.rbar a{color:var(--muted);text-decoration:none;font-size:15px}
+.sizes{display:flex;gap:6px}
+.sizes .btn{min-height:36px;padding:0 12px}
+.rhead{padding-block:30px 8px;display:grid;gap:6px}
+.rhead .meta{font-size:14px}
+.rt{--rs:21px;font:400 var(--rs)/2.05 var(--f-read);padding-block:12px 24px}
+.rt p{margin:0 0 1.1em;text-indent:1.4em}
+.rnav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;padding-top:18px;border-top:1px solid var(--line)}
+
+.fgrid{display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:32px;align-items:start;margin-top:10px}
+.form{display:grid;gap:20px;min-width:0;max-width:720px}
+.fld{display:grid;gap:6px}
+.fld label,.fld .lb{font-weight:500}
+.hint{color:var(--muted);font-size:14px}
+.msg{font-size:15px;min-height:1.7em}
+.msg.err{color:var(--danger)}
+.sec{font:700 20px var(--f-display);margin:8px 0 -4px;padding-top:14px;border-top:1px solid var(--line)}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.sw{position:relative;display:block}
+.sw input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.sw span{display:block;width:38px;height:38px;border-radius:10px;background:var(--c);outline:2px solid transparent;outline-offset:3px}
+.sw input:checked+span{outline-color:var(--fg)}
+.sw input:focus-visible+span{outline-color:var(--accent)}
+.prev{position:sticky;top:16px}
+@media (max-width:700px){
+  .fgrid{grid-template-columns:1fr}
+  .prev{display:none}
+  .nv{grid-template-columns:1fr}
+  .nv .cover{max-width:170px}
+}
+.foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+#toast{position:fixed;inset-inline:0;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;pointer-events:none;z-index:20;padding-inline:16px}
+.toast{background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:15px}
+.toast.err{background:var(--danger);color:var(--bg)}
+@media (prefers-reduced-motion:reduce){.cover{transition:none}a.card:hover .cover{transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="#library" aria-label="مداد، الصفحة الرئيسية">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C12 2 5 10.2 5 15.2a7 7 0 0 0 14 0C19 10.2 12 2 12 2z"/></svg>
+      مداد
+    </a>
+    <nav class="nav" id="nav" aria-label="التنقل"></nav>
+  </header>
+  <main id="view"></main>
+  <footer class="foot">مداد: منصة لنشر الروايات العربية وقراءتها.</footer>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// إعدادات الاتصال بـ Supabase: غيّر القيمتين من Project Settings > API
+window.MIDAD_CONFIG = {
+  SUPABASE_URL: "https://hazubmesffnedjhncgzn.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_N9N-BFE_GYdulpCUFk53KA_H088Pa5U"
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+(function(){
+  var COLORS=['#1F3A5F','#0F5E5A','#7A2745','#94601A','#2F5D3A','#4A5568','#5B3A78','#9A3F2B'];
+  var GENRES=['اجتماعية','رومانسية','خيال وفانتازيا','غموض وجريمة','تاريخية','رعب','مغامرة','خيال علمي'];
+  var MAXTXT=60000;
+  var UUID='[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
+  var nf=new Intl.NumberFormat('ar-EG');
+
+  var CFG=window.MIDAD_CONFIG||{};
+  var sb=null;
+  try{
+    if(CFG.SUPABASE_URL&&CFG.SUPABASE_ANON_KEY&&CFG.SUPABASE_URL.indexOf('YOUR_')<0&&window.supabase){
+      sb=window.supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY);
+    }
+  }catch(e){sb=null}
+
+  function h(tag,attrs){
+    var el=document.createElement(tag);
+    attrs=attrs||{};
+    for(var k in attrs){
+      var v=attrs[k];
+      if(v==null||v===false)continue;
+      if(k==='class')el.className=v;
+      else if(k==='text')el.textContent=v;
+      else if(k==='vars'){for(var p in v)el.style.setProperty(p,v[p]);}
+      else if(k==='value'||k==='checked'||k==='disabled'||k==='selected')el[k]=v;
+      else if(k.slice(0,2)==='on')el.addEventListener(k.slice(2),v);
+      else el.setAttribute(k,v===true?'':v);
+    }
+    for(var i=2;i<arguments.length;i++){
+      var kids=[].concat(arguments[i]);
+      for(var j=0;j<kids.length;j++){
+        var c=kids[j];
+        if(c==null||c===false)continue;
+        el.append(c.nodeType?c:document.createTextNode(c));
+      }
+    }
+    return el;
+  }
+  function lsGet(k,d){try{var v=localStorage.getItem(k);return v==null?d:v}catch(e){return d}}
+  function lsSet(k,v){try{localStorage.setItem(k,String(v))}catch(e){}}
+  function fmtDate(t){try{return new Date(t).toLocaleDateString('ar',{year:'numeric',month:'long',day:'numeric'})}catch(e){return ''}}
+  function chWord(c){return !c?'بلا فصول':c===1?'فصل واحد':c===2?'فصلان':c<=10?nf.format(c)+' فصول':nf.format(c)+' فصلًا'}
+  function wordCount(t){return (t||'').trim().split(/\s+/).filter(Boolean).length}
+  function minutes(w){return Math.max(1,Math.round(w/180))}
+
+  /* state */
+  var user=null,uid=null;
+  var novels=[],loaded=false,slow=false,booting=true,pending=false,afterLogin='';
+  var chCache={},filter={q:'',g:''},token=0,gridEl=null,chipsEl=null;
+  var view=document.getElementById('view');
+
+  function canManage(n){return !!uid&&n.authorId===uid}
+  function normNovel(r){
+    return {id:r.id,title:r.title,author:r.author,authorId:r.author_id,genre:r.genre,summary:r.summary,
+      color:r.color,coverUrl:r.cover_url,chapterCount:(r.chapters&&r.chapters[0]&&r.chapters[0].count)||0,
+      createdAt:r.created_at,updatedAt:r.updated_at};
+  }
+  function must(res){if(res.error)throw res.error;return res.data}
+  function changed(res){var d=must(res);if(!d||!d.length)throw {code:'42501'};return d}
+
+  /* feedback */
+  var toastTimer=null;
+  function toast(msg,err){
+    var t=document.getElementById('toast');
+    t.replaceChildren(h('div',{class:'toast'+(err?' err':''),text:msg}));
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(function(){t.replaceChildren()},3600);
+  }
+  function errMsg(e){
+    var c=e&&e.code;
+    if(c==='42501')return 'لا تملك صلاحية هذا الإجراء. سجّل الدخول بحساب كاتب الرواية.';
+    if(c==='23514')return 'النص فارغ أو أطول من المسموح.';
+    return 'تعذّر الحفظ. تحقق من اتصالك وحاول مرة أخرى.';
+  }
+  function stateBox(title,text,action){
+    return h('div',{class:'state'},h('b',{text:title}),text?h('span',{text:text}):null,action||null);
+  }
+  function notFound(){
+    return stateBox('لم نجد هذه الصفحة','ربما حُذفت الرواية أو تغيّر الرابط.',h('a',{class:'btn',href:'#library',text:'العودة إلى المكتبة'}));
+  }
+  function setupBox(){
+    return stateBox('الموقع غير مضبوط بعد','افتح الملف config.js وضع رابط مشروع Supabase والمفتاح العام. الخطوات في ملف README.');
+  }
+  function dangerBtn(label,confirmLabel,fn){
+    var wrap=h('span',{class:'inl'});
+    function show(){wrap.replaceChildren(h('button',{class:'btn danger',type:'button',onclick:ask,text:label}))}
+    function ask(){
+      wrap.replaceChildren(
+        h('button',{class:'btn danger solid',type:'button',text:confirmLabel,onclick:async function(){
+          try{await fn()}catch(e){toast(errMsg(e),true);show()}
+        }}),
+        h('button',{class:'btn',type:'button',onclick:show,text:'تراجع'})
+      );
+    }
+    show();
+    return wrap;
+  }
+
+  /* covers */
+  function shrink(file){
+    return new Promise(function(res,rej){
+      var u=URL.createObjectURL(file),im=new Image();
+      im.onload=function(){
+        var s=Math.min(1,700/im.width),c=document.createElement('canvas');
+        c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);
+        c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+        URL.revokeObjectURL(u);
+        c.toBlob(function(b){b?res(b):rej(new Error('blob'))},'image/jpeg',0.86);
+      };
+      im.onerror=function(){URL.revokeObjectURL(u);rej(new Error('img'))};
+      im.src=u;
+    });
+  }
+  function cover(n){
+    if(n.coverUrl)return h('div',{class:'cover has-img'},h('img',{src:n.coverUrl,alt:'غلاف '+(n.title||''),loading:'lazy'}));
+    return h('div',{class:'cover',vars:{'--c':n.color||COLORS[0]}},
+      h('span',{class:'cv-g',text:n.genre||''}),
+      h('span',{class:'cv-t',text:n.title||'عنوان الرواية'}),
+      h('span',{class:'cv-a',text:n.author||'اسم الكاتب'})
+    );
+  }
+
+  /* data */
+  async function loadNovels(){
+    if(!sb)return;
+    try{
+      var rows=must(await sb.from('novels').select('*, chapters(count)').order('updated_at',{ascending:false}).limit(300));
+      novels=rows.map(normNovel);
+      loaded=true;slow=false;
+    }catch(e){
+      if(!loaded)slow=true;
+    }
+    onData();
+  }
+  async function loadChapters(n){
+    var c=chCache[n.id];
+    if(c&&c.stamp===n.updatedAt)return c.list;
+    var rows=must(await sb.from('chapters').select('id,n,title,body').eq('novel_id',n.id).order('n',{ascending:true}));
+    var list=rows.map(function(r){return {id:r.id,n:r.n,title:r.title,text:r.body}});
+    chCache[n.id]={stamp:n.updatedAt,list:list};
+    return list;
+  }
+  function touch(id){return sb.from('novels').update({updated_at:new Date().toISOString()}).eq('id',id).select('id')}
+
+  /* routing */
+  var cur='';
+  try{cur=location.hash.slice(1)}catch(e){}
+  function go(hash){
+    cur=hash;
+    try{location.hash=hash}catch(e){}
+    render();
+  }
+  function route(){
+    var s=cur;
+    if(s==='write')return {v:'write'};
+    if(s==='login')return {v:'login'};
+    var m=s.match(new RegExp('^(n|r|edit|add|fix)-('+UUID+')(?:-(\\d+))?$'));
+    if(m)return {v:m[1],id:m[2],i:m[3]?+m[3]:null};
+    return {v:'home'};
+  }
+  function render(){
+    token++;
+    pending=false;gridEl=null;chipsEl=null;
+    var r=route(),el;
+    if(r.v==='home')el=homeView();
+    else if(r.v==='n')el=novelView(r);
+    else if(r.v==='r')el=readerView(r);
+    else if(r.v==='login')el=loginView();
+    else el=formView(r);
+    view.replaceChildren(el);
+    paintNav();
+    window.scrollTo(0,0);
+  }
+  function paintNav(){
+    var nav=document.getElementById('nav');
+    nav.replaceChildren(
+      h('a',{class:'btn',href:'#library',text:'المكتبة'}),
+      user?h('button',{class:'btn',type:'button',text:'خروج',onclick:async function(){if(sb)await sb.auth.signOut();toast('تم تسجيل الخروج')}}):h('a',{class:'btn',href:'#login',text:'دخول'}),
+      h('a',{class:'btn primary',href:'#write',text:'انشر روايتك'})
+    );
+  }
+
+  /* home */
+  function paintChips(){
+    if(!chipsEl)return;
+    var seen={};novels.forEach(function(n){if(n.genre)seen[n.genre]=1});
+    var gs=GENRES.filter(function(g){return seen[g]});
+    function chip(label,val){
+      return h('button',{class:'chip',type:'button','aria-pressed':String(filter.g===val),text:label,onclick:function(){filter.g=(filter.g===val?'':val);paintChips();paintGrid()}});
+    }
+    if(!gs.length){chipsEl.replaceChildren();return}
+    chipsEl.replaceChildren(chip('الكل',''),gs.map(function(g){return chip(g,g)}));
+  }
+  function card(n){
+    return h('a',{class:'card',href:'#n-'+n.id},
+      cover(n),
+      h('div',{class:'card-t',text:n.title}),
+      h('div',{class:'card-a',text:n.author}),
+      h('div',{class:'card-m',text:chWord(n.chapterCount||0)})
+    );
+  }
+  function paintGrid(){
+    if(!gridEl)return;
+    if(!sb){gridEl.replaceChildren(setupBox());return}
+    if(!loaded){
+      gridEl.replaceChildren(slow
+        ?stateBox('تعذّر الوصول إلى المكتبة حتى الآن','تحقق من اتصالك بالإنترنت ثم حدّث الصفحة.')
+        :stateBox('جارٍ تحميل الروايات…'));
+      return;
+    }
+    if(!novels.length){
+      gridEl.replaceChildren(stateBox('لا توجد روايات بعد','كن أول من ينشر رواية هنا.',h('a',{class:'btn primary',href:'#write',text:'انشر روايتك'})));
+      return;
+    }
+    var q=filter.q;
+    var list=novels.filter(function(n){
+      return (!filter.g||n.genre===filter.g)&&(!q||((n.title||'')+' '+(n.author||'')+' '+(n.summary||'')).indexOf(q)>-1);
+    });
+    if(!list.length){gridEl.replaceChildren(stateBox('لا توجد نتائج','جرّب كلمة أخرى أو اختر «الكل».'));return}
+    gridEl.replaceChildren(h('div',{class:'grid'},list.map(card)));
+  }
+  function homeView(){
+    chipsEl=h('div',{class:'chips',role:'group','aria-label':'تصنيف الروايات'});
+    gridEl=h('div');
+    var search=h('input',{class:'in',id:'q',type:'search',placeholder:'ابحث بعنوان الرواية أو اسم الكاتب','aria-label':'بحث في الروايات',value:filter.q,oninput:function(e){filter.q=e.target.value.trim();paintGrid()}});
+    var el=h('section',{},
+      h('div',{class:'hero'},
+        h('h1',{text:'اقرأ حكايات جديدة، أو انشر حكايتك'}),
+        h('p',{class:'sub',text:'مكتبة مفتوحة للروايات العربية. يكتب الكتّاب فصولهم هنا، ويقرؤها الجميع.'}),
+        search
+      ),
+      chipsEl,gridEl
+    );
+    paintChips();paintGrid();
+    return el;
+  }
+  function onData(){
+    var r=route();
+    if(r.v==='home'){paintChips();paintGrid()}
+    else if(r.v==='n')render();
+    else if(pending)render();
+  }
+
+  /* novel page */
+  function novelView(r){
+    var n=novels.find(function(x){return x.id===r.id});
+    if(!n){
+      if(!sb)return setupBox();
+      if(!loaded){pending=true;return stateBox('جارٍ التحميل…')}
+      return notFound();
+    }
+    var my=token;
+    var stats=h('span',{text:chWord(n.chapterCount||0)});
+    var actions=h('div',{class:'acts'});
+    var list=h('div');
+    var last=+lsGet('mid:last:'+n.id,0);
+
+    var meta=h('div',{class:'meta'},n.genre?h('span',{class:'badge',text:n.genre}):null,stats,h('span',{text:'آخر تحديث '+fmtDate(n.updatedAt)}));
+    var info=h('div',{class:'nv-i'},
+      h('h1',{text:n.title}),
+      h('div',{class:'meta',text:'بقلم '+n.author}),
+      meta,
+      n.summary?h('p',{class:'sum',text:n.summary}):null,
+      actions
+    );
+    var el=h('section',{},
+      h('a',{class:'back',href:'#library',text:'← المكتبة'}),
+      h('div',{class:'nv'},cover(n),info),
+      list
+    );
+    list.append(h('div',{class:'state'},h('span',{text:'جارٍ تحميل الفصول…'})));
+
+    if(canManage(n)){
+      actions.append(
+        h('a',{class:'btn',href:'#add-'+n.id,text:'أضف فصلًا'}),
+        h('a',{class:'btn',href:'#edit-'+n.id,text:'تعديل البيانات'}),
+        dangerBtn('حذف الرواية','تأكيد حذف الرواية وفصولها',async function(){
+          changed(await sb.from('novels').delete().eq('id',n.id).select('id'));
+          delete chCache[n.id];
+          await loadNovels();
+          toast('حُذفت الرواية');
+          go('library');
+        })
+      );
+    }
+    loadChapters(n).then(function(chs){
+      if(my!==token)return;
+      var words=chs.reduce(function(a,c){return a+wordCount(c.text)},0);
+      stats.textContent=chWord(chs.length)+(words?' · '+nf.format(words)+' كلمة':'');
+      if(chs.length){
+        var ok=last>=1&&last<=chs.length;
+        actions.prepend(h('a',{class:'btn primary',href:'#r-'+n.id+'-'+(ok?last:1),text:ok?'تابع القراءة (الفصل '+nf.format(last)+')':'ابدأ القراءة'}));
+      }
+      if(!chs.length){list.replaceChildren(stateBox('لم تُنشر فصول بعد',canManage(n)?'أضف الفصل الأول ليبدأ القراء بالقراءة.':null));return}
+      var ol=h('ol',{class:'chs'});
+      chs.forEach(function(c,i){
+        var w=wordCount(c.text);
+        ol.append(h('li',{class:'ch'},
+          h('span',{class:'no',text:nf.format(i+1)}),
+          h('a',{class:'t',href:'#r-'+n.id+'-'+(i+1),text:c.title}),
+          h('span',{class:'m',text:'≈ '+nf.format(minutes(w))+' د'}),
+          canManage(n)?h('a',{class:'ed',href:'#fix-'+n.id+'-'+(i+1),text:'تعديل'}):null
+        ));
+      });
+      list.replaceChildren(ol);
+    }).catch(function(){
+      if(my!==token)return;
+      list.replaceChildren(stateBox('تعذّر تحميل الفصول','حاول تحديث الصفحة بعد قليل.'));
+    });
+    return el;
+  }
+
+  /* reader */
+  function readerView(r){
+    var n=novels.find(function(x){return x.id===r.id});
+    if(!n){
+      if(!sb)return setupBox();
+      if(!loaded){pending=true;return stateBox('جارٍ التحميل…')}
+      return notFound();
+    }
+    var my=token;
+    var box=h('div',{class:'reader'},stateBox('جارٍ تحميل الفصل…'));
+    loadChapters(n).then(function(chs){
+      if(my!==token)return;
+      var i=r.i||1,c=chs[i-1];
+      if(!c){box.replaceChildren(stateBox('هذا الفصل غير موجود',null,h('a',{class:'btn',href:'#n-'+n.id,text:'العودة إلى الرواية'})));return}
+      lsSet('mid:last:'+n.id,i);
+      var size=Math.min(32,Math.max(16,+lsGet('mid:size',21)||21));
+      var body=h('div',{class:'rt'});
+      body.style.setProperty('--rs',size+'px');
+      (c.text||'').split(/\n+/).filter(function(p){return p.trim()}).forEach(function(p){body.append(h('p',{text:p.trim()}))});
+      function setSize(d){size=Math.min(32,Math.max(16,size+d));lsSet('mid:size',size);body.style.setProperty('--rs',size+'px')}
+      var w=wordCount(c.text);
+      var prev=i>1?h('a',{class:'btn',href:'#r-'+n.id+'-'+(i-1),text:'→ الفصل السابق'}):h('span');
+      var next=i<chs.length?h('a',{class:'btn primary',href:'#r-'+n.id+'-'+(i+1),text:'الفصل التالي ←'}):h('a',{class:'btn',href:'#n-'+n.id,text:'انتهى المنشور، العودة إلى الرواية'});
+      box.replaceChildren(
+        h('div',{class:'rbar'},
+          h('a',{href:'#n-'+n.id,text:'← '+n.title}),
+          h('div',{class:'sizes',role:'group','aria-label':'حجم الخط'},
+            h('button',{class:'btn',type:'button','aria-label':'تصغير الخط',text:'أ−',onclick:function(){setSize(-2)}}),
+            h('button',{class:'btn',type:'button','aria-label':'تكبير الخط',text:'أ+',onclick:function(){setSize(2)}})
+          )
+        ),
+        h('div',{class:'rhead'},
+          h('div',{class:'meta',text:'الفصل '+nf.format(i)+' من '+nf.format(chs.length)+' · ≈ '+nf.format(minutes(w))+' دقائق قراءة'}),
+          h('h2',{text:c.title})
+        ),
+        body,
+        h('div',{class:'rnav'},prev,next)
+      );
+    }).catch(function(){
+      if(my!==token)return;
+      box.replaceChildren(stateBox('تعذّر تحميل الفصل','حاول تحديث الصفحة بعد قليل.'));
+    });
+    return box;
+  }
+
+  /* login */
+  function authMsg(e){
+    var m=(e&&e.message)||'';
+    if(/Invalid login/i.test(m))return 'اسم المستخدم أو كلمة المرور غير صحيحة.';
+    if(/already registered/i.test(m))return 'اسم المستخدم هذا مأخوذ. اختر اسمًا آخر أو اضغط «دخول».';
+    if(/at least/i.test(m))return 'كلمة المرور قصيرة. استخدم 6 أحرف على الأقل.';
+    if(/valid email|invalid format|Unable to validate/i.test(m))return 'اسم المستخدم غير صالح.';
+    if(/rate limit/i.test(m))return 'محاولات كثيرة. انتظر قليلًا ثم حاول مجددًا.';
+    return 'تعذّر إتمام العملية. حاول مرة أخرى.';
+  }
+  function uname2email(u){
+    u=u.trim().toLowerCase();
+    var b=new TextEncoder().encode(u),x='';
+    for(var i=0;i<b.length;i++)x+=('0'+b[i].toString(16)).slice(-2);
+    return 'u'+x+'@midad-users.com';
+  }
+  function loginView(){
+    if(!sb)return setupBox();
+    if(user)return stateBox('أنت مسجّل الدخول','يمكنك الآن نشر رواياتك.',h('a',{class:'btn primary',href:'#write',text:'انشر روايتك'}));
+    var email=h('input',{class:'in',id:'l-email',type:'text',autocomplete:'username',autocapitalize:'none',spellcheck:'false',required:true});
+    var pass=h('input',{class:'in',id:'l-pass',type:'password',autocomplete:'current-password',dir:'ltr',minlength:'6',required:true});
+    var msg=h('div',{class:'msg',role:'alert'});
+    var bIn=h('button',{class:'btn primary',type:'submit',text:'دخول'});
+    var bUp=h('button',{class:'btn',type:'button',text:'إنشاء حساب'});
+    function busy(b){bIn.disabled=b;bUp.disabled=b}
+    function say(t,err){msg.className='msg'+(err?' err':'');msg.textContent=t}
+    var form=h('form',{class:'form',novalidate:true,onsubmit:async function(e){
+      e.preventDefault();
+      if(!email.value.trim()||!pass.value){say('اكتب اسم المستخدم وكلمة المرور.',true);return}
+      busy(true);say('');
+      try{
+        must(await sb.auth.signInWithPassword({email:uname2email(email.value),password:pass.value}));
+        toast('أهلًا بك');
+        go(afterLogin||'library');afterLogin='';
+      }catch(err){busy(false);say(authMsg(err),true)}
+    }},
+      h('div',{class:'fld'},h('label',{for:'l-email',text:'اسم المستخدم'}),email),
+      h('div',{class:'fld'},h('label',{for:'l-pass',text:'كلمة المرور'}),pass,h('div',{class:'hint',text:'6 أحرف على الأقل.'})),
+      msg,
+      h('div',{class:'acts'},bIn,bUp)
+    );
+    bUp.addEventListener('click',async function(){
+      if(email.value.trim().length<3||pass.value.length<6){say('اسم المستخدم 3 أحرف على الأقل وكلمة المرور 6 أحرف على الأقل.',true);return}
+      busy(true);say('');
+      try{
+        var d=must(await sb.auth.signUp({email:uname2email(email.value),password:pass.value}));
+        if(d&&d.session){toast('تم إنشاء الحساب');go(afterLogin||'library');afterLogin=''}
+        else{busy(false);say('تم إنشاء الحساب. اضغط «دخول».')}
+      }catch(err){busy(false);say(authMsg(err),true)}
+    });
+    return h('section',{},
+      h('div',{class:'hero'},h('h1',{text:'الدخول إلى مداد'}),h('p',{class:'sub',text:'القراءة مفتوحة للجميع. الحساب مطلوب لنشر الروايات فقط.'})),
+      form
+    );
+  }
+
+  /* forms */
+  function fld(id,label,ctrl,hint){
+    return h('div',{class:'fld'},h('label',{for:id,text:label}),ctrl,hint?h('div',{class:'hint',text:hint}):null);
+  }
+  function formView(r){
+    if(!sb)return setupBox();
+    if(!user){
+      afterLogin=cur;
+      return stateBox('سجّل الدخول لتنشر','القراءة مفتوحة للجميع، أما النشر والتعديل فيحتاجان حسابًا.',h('a',{class:'btn primary',href:'#login',text:'دخول أو إنشاء حساب'}));
+    }
+    var mode=r.v,n=null;
+    if(mode!=='write'){
+      n=novels.find(function(x){return x.id===r.id});
+      if(!n){
+        if(!loaded){pending=true;return stateBox('جارٍ التحميل…')}
+        return notFound();
+      }
+      if(!canManage(n))return stateBox('لا يمكنك تعديل هذه الرواية','التعديل متاح لكاتبها فقط.',h('a',{class:'btn',href:'#n-'+n.id,text:'العودة إلى الرواية'}));
+    }
+    if(mode==='fix'){
+      var holder=h('div',{},stateBox('جارٍ تحميل الفصل…'));
+      var my=token;
+      loadChapters(n).then(function(chs){
+        if(my!==token)return;
+        var c=chs[(r.i||1)-1];
+        if(!c){holder.replaceChildren(notFound());return}
+        holder.replaceChildren(buildForm(mode,n,c,chs));
+      }).catch(function(){if(my===token)holder.replaceChildren(stateBox('تعذّر تحميل الفصل'))});
+      return holder;
+    }
+    return buildForm(mode,n,null,null);
+  }
+  function buildForm(mode,n,c,chs){
+    var showNovel=(mode==='write'||mode==='edit');
+    var showChapter=(mode==='write'||mode==='add'||mode==='fix');
+    var draft={title:n?n.title:'',author:n?n.author:lsGet('mid:pen',''),color:n&&n.color?n.color:COLORS[0],coverUrl:n&&n.coverUrl?n.coverUrl:'',genre:n&&n.genre?n.genre:GENRES[0]};
+    var pv=h('div',{class:'prev'},cover(draft));
+    function repaintPreview(){pv.replaceChildren(cover(draft))}
+
+    var title=h('input',{class:'in',id:'f-title',type:'text',maxlength:'90',value:draft.title,required:true,oninput:function(e){draft.title=e.target.value;repaintPreview()}});
+    var author=h('input',{class:'in',id:'f-author',type:'text',maxlength:'60',value:draft.author,required:true,oninput:function(e){draft.author=e.target.value;repaintPreview()}});
+    var genre=h('select',{class:'in',id:'f-genre',onchange:function(e){draft.genre=e.target.value;repaintPreview()}},
+      GENRES.map(function(g){return h('option',{value:g,text:g})}));
+    genre.value=draft.genre;
+    var summary=h('textarea',{class:'in',id:'f-summary',maxlength:'1200'},n&&n.summary?n.summary:'');
+    var swatches=h('div',{class:'swatches',role:'radiogroup','aria-label':'لون الغلاف'},
+      COLORS.map(function(col){
+        return h('label',{class:'sw',vars:{'--c':col}},
+          h('input',{type:'radio',name:'f-color',value:col,checked:col===draft.color,'aria-label':'لون '+col,onchange:function(){draft.color=col;repaintPreview()}}),
+          h('span'));
+      }));
+    var chTitle=h('input',{class:'in',id:'f-ch-title',type:'text',maxlength:'120',value:c?c.title:'',required:true});
+    var chText=h('textarea',{class:'in story',id:'f-ch-text',maxlength:String(MAXTXT),required:true},c?c.text:'');
+    var counter=h('div',{class:'hint'});
+    function count(){counter.textContent=nf.format(chText.value.length)+' من '+nf.format(MAXTXT)+' حرف · '+nf.format(wordCount(chText.value))+' كلمة'}
+    chText.addEventListener('input',count);count();
+
+    var pendingBlob=null,objUrl=null;
+    var fileIn=h('input',{class:'in',id:'f-cover',type:'file',accept:'image/*',onchange:async function(e){
+      var f=e.target.files&&e.target.files[0];
+      if(!f)return;
+      try{
+        pendingBlob=await shrink(f);
+        if(objUrl)URL.revokeObjectURL(objUrl);
+        objUrl=URL.createObjectURL(pendingBlob);
+        draft.coverUrl=objUrl;
+        repaintPreview();
+      }catch(err){toast('تعذّر قراءة الصورة. جرّب صورة أخرى.',true)}
+    }});
+    var rmCover=h('button',{class:'btn',type:'button',text:'إزالة الصورة',onclick:function(){pendingBlob=null;draft.coverUrl='';fileIn.value='';repaintPreview()}});
+    var coverField=h('div',{class:'fld'},h('label',{for:'f-cover',text:'صورة الغلاف'}),fileIn,h('div',{class:'hint',text:'اختيارية. الأفضل صورة طولية بنسبة ٢ إلى ٣ تحمل العنوان. وإن لم ترفع صورة يُرسم الغلاف باللون المختار.'}),h('div',{class:'acts'},rmCover));
+
+    var submit=h('button',{class:'btn primary',type:'submit',text:mode==='write'?'انشر الرواية':mode==='edit'?'احفظ التعديلات':mode==='add'?'انشر الفصل':'احفظ الفصل'});
+    var cancel=h('a',{class:'btn',href:n?'#n-'+n.id:'#library',text:'إلغاء'});
+    var extra=null;
+    if(mode==='fix'){
+      extra=dangerBtn('حذف الفصل','تأكيد حذف الفصل',async function(){
+        changed(await sb.from('chapters').delete().eq('id',c.id).select('id'));
+        must(await touch(n.id));
+        delete chCache[n.id];
+        await loadNovels();
+        toast('حُذف الفصل');
+        go('n-'+n.id);
+      });
+    }
+
+    var form=h('form',{class:'form',novalidate:true,onsubmit:async function(e){
+      e.preventDefault();
+      var t=title.value.trim(),a=author.value.trim(),ct=chTitle.value.trim(),tx=chText.value.trim();
+      if(showNovel&&(!t||!a)){toast('اكتب عنوان الرواية واسم الكاتب',true);return}
+      if(showChapter&&(!ct||!tx)){toast('اكتب عنوان الفصل ونصه',true);return}
+      submit.disabled=true;
+      var coverUrl=draft.coverUrl||'';
+      try{
+        if(showNovel&&pendingBlob){
+          var path=uid+'/'+Date.now()+'.jpg';
+          var up=await sb.storage.from('covers').upload(path,pendingBlob,{contentType:'image/jpeg'});
+          if(up.error){toast('تعذّر رفع الصورة. حاول مرة أخرى أو انشر بدونها.',true);submit.disabled=false;return}
+          coverUrl=sb.storage.from('covers').getPublicUrl(path).data.publicUrl;
+        }else if(coverUrl.indexOf('blob:')===0){coverUrl=''}
+
+        var now=new Date().toISOString();
+        if(mode==='write'){
+          var row=must(await sb.from('novels').insert({title:t,author:a,genre:genre.value,summary:summary.value.trim(),color:draft.color,cover_url:coverUrl}).select('id').single());
+          try{must(await sb.from('chapters').insert({novel_id:row.id,n:1,title:ct,body:tx}))}
+          catch(ce){await sb.from('novels').delete().eq('id',row.id);throw ce}
+          lsSet('mid:pen',a);
+          await loadNovels();
+          toast('نُشرت الرواية');
+          go('n-'+row.id);
+        }else if(mode==='edit'){
+          changed(await sb.from('novels').update({title:t,author:a,genre:genre.value,summary:summary.value.trim(),color:draft.color,cover_url:coverUrl,updated_at:now}).eq('id',n.id).select('id'));
+          lsSet('mid:pen',a);
+          await loadNovels();
+          toast('حُفظت التعديلات');
+          go('n-'+n.id);
+        }else if(mode==='add'){
+          var last=must(await sb.from('chapters').select('n').eq('novel_id',n.id).order('n',{ascending:false}).limit(1));
+          var next=(last[0]?last[0].n:0)+1;
+          must(await sb.from('chapters').insert({novel_id:n.id,n:next,title:ct,body:tx}));
+          must(await touch(n.id));
+          delete chCache[n.id];
+          await loadNovels();
+          toast('نُشر الفصل');
+          go('n-'+n.id);
+        }else{
+          changed(await sb.from('chapters').update({title:ct,body:tx}).eq('id',c.id).select('id'));
+          must(await touch(n.id));
+          delete chCache[n.id];
+          await loadNovels();
+          toast('حُفظ الفصل');
+          go('n-'+n.id);
+        }
+      }catch(err){
+        submit.disabled=false;
+        toast(errMsg(err),true);
+      }
+    }},
+      showNovel?fld('f-title','عنوان الرواية',title):null,
+      showNovel?fld('f-author','اسم الكاتب',author,'الاسم الذي يظهر على الغلاف.'):null,
+      showNovel?fld('f-genre','التصنيف',genre):null,
+      showNovel?h('div',{class:'fld'},h('span',{class:'lb',text:'لون الغلاف'}),swatches):null,
+      showNovel?coverField:null,
+      showNovel?fld('f-summary','نبذة عن الرواية',summary,'اختيارية. تظهر في صفحة الرواية.'):null,
+      showNovel&&showChapter?h('div',{class:'sec',text:'الفصل الأول'}):null,
+      showChapter?fld('f-ch-title','عنوان الفصل',chTitle):null,
+      showChapter?h('div',{class:'fld'},h('label',{for:'f-ch-text',text:'نص الفصل'}),chText,counter,h('div',{class:'hint',text:'افصل بين الفقرات بسطر فارغ.'})):null,
+      h('div',{class:'acts'},submit,cancel,extra)
+    );
+
+    var heading=mode==='write'?'انشر روايتك':mode==='edit'?'تعديل بيانات الرواية':mode==='add'?'فصل جديد':'تعديل الفصل';
+    var sub=n&&mode!=='write'?'«'+n.title+'»':null;
+    return h('section',{},
+      h('a',{class:'back',href:n?'#n-'+n.id:'#library',text:'← رجوع'}),
+      h('div',{class:'hero'},h('h1',{text:heading}),sub?h('p',{class:'sub',text:sub}):null),
+      showNovel?h('div',{class:'fgrid'},form,pv):form
+    );
+  }
+
+  /* boot */
+  window.addEventListener('hashchange',function(){
+    var s=location.hash.slice(1);
+    if(s!==cur){cur=s;render()}
+  });
+  document.addEventListener('click',function(e){
+    var a=e.target&&e.target.closest?e.target.closest('a[href^="#"]'):null;
+    if(!a||e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey)return;
+    e.preventDefault();
+    go(a.getAttribute('href').slice(1));
+  });
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='visible'&&sb&&loaded&&route().v==='home')loadNovels();
+  });
+
+  render();
+  (async function(){
+    if(!sb){booting=false;render();return}
+    try{
+      var s=await sb.auth.getSession();
+      var ss=s&&s.data?s.data.session:null;
+      user=ss?ss.user:null;uid=user?user.id:null;
+    }catch(e){}
+    booting=false;
+    paintNav();
+    sb.auth.onAuthStateChange(function(_ev,session){
+      var prev=uid;
+      user=session?session.user:null;uid=user?user.id:null;
+      if(prev===uid)return;
+      var r=route();
+      if(r.v==='login'&&user)go(afterLogin||'library');
+      else render();
+    });
+    var t=setTimeout(function(){if(!loaded){slow=true;if(route().v==='home')paintGrid()}},10000);
+    await loadNovels();
+    clearTimeout(t);
+  })();
+})();
+</script>
+</body>
+</html>
